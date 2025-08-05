@@ -1,0 +1,53 @@
+# SUSTCSC_12 HGEMM赛题
+这里参考了赖海斌gg示例代码仓中的部分代码：https://github.com/HaibinLai/SUSTech-HGEMM
+在此也要感谢Bruce-Lee-LY仓库代码的指导https://github.com/Bruce-Lee-LY/cuda_hgemm
+
+## 1. 环境要求
+* NVIDIA GPU（支持CUDA）
+* CUDA Toolkit
+* cuBLAS库
+* Python3.x
+
+初始化：
+```
+bash ./scripts/init_checking.sh
+```
+
+## 2. 数据生成
+```
+bash ./scripts/generation.sh
+```
+
+## 3. 编译
+使用Makefile编译
+```
+cd /path/to/HGEMM
+make
+```
+
+这将会编译以下目标：
+* hgemm_compare.cu：对比cuBLAS和我们自己实现的HGEMM求解性能(针对小矩阵)
+* hgemm_compare_large.cu：对比cuBLAS和我们自己实现的HGEMM求解性能(针对大矩阵)
+* hgemm_cublas.cu：cuBLAS实现
+* hgemm.cu：自己实现的HGEMM
+* hgemm_large.cu：自己实现的HGEMM(针对大矩阵)
+
+## 4. 运行
+```
+bash ./scripts/cuBLAS_benchmark.sh # cuBLAS
+bash ./scripts/custom_benchmark.sh # 自实现的HGEMM
+```
+
+## 5. 性能评估
+```
+bash ./scripts/compare.sh
+```
+
+## 6. 统计计算分值
+```
+python ./tools/score_analysis.py
+```
+
+Tips: 
+1. scripts下的sh文件以及tools下的score_analysis.py都需要修改BIN的文件路径，我使用的是绝对路径
+2. 修改了compare.sh内容，让case8，case9在large上运行且能保证精度通过(因为large的计算会损失精度来获取性能)，同样修改了custom_benchmark.sh
